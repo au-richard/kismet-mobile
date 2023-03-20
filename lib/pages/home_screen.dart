@@ -3,18 +3,15 @@ import 'dart:async';
 import 'package:flutter_fortune_wheel/flutter_fortune_wheel.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   final TextEditingController _textController = TextEditingController();
   final List<FortuneItem> _options = [];
-
-  // int _selectedOption = 0;
   final StreamController<int> _selectedOption =
       StreamController<int>.broadcast();
   bool _isSpinning = false;
@@ -37,9 +34,9 @@ class _HomePageState extends State<HomePage> {
         children: [
           Expanded(
             child: FortuneWheel(
-              // selected: _selectedOption,
               selected: _selectedOption.stream,
-              items: _options.isNotEmpty ? _options : _getDefaultOptions(),
+              // items: _options.isNotEmpty ? _options : _getDefaultOptions(),
+              items: _getOptions(),
               onAnimationEnd: _handleAnimationEnd,
               animateFirst: _isSpinning,
             ),
@@ -57,9 +54,18 @@ class _HomePageState extends State<HomePage> {
             onSubmitted: (_) => _handleAddOption(),
           ),
           const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: _isSpinning ? null : _handleSpinWheel,
-            child: const Text('Spin'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              ElevatedButton(
+                onPressed: _isSpinning ? null : _handleSpinWheel,
+                child: const Text('Spin'),
+              ),
+              ElevatedButton(
+                onPressed: _handleClearOptions,
+                child: const Text('Clear Options'),
+              ),
+            ],
           ),
         ],
       ),
@@ -72,6 +78,7 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         _options.add(FortuneItem(child: Text(newOption)));
         _textController.clear();
+        _updateOptions(_options);
       });
     }
   }
@@ -79,7 +86,6 @@ class _HomePageState extends State<HomePage> {
   void _handleSpinWheel() {
     setState(() {
       _isSpinning = true;
-      // _selectedOption = 0;
       _selectedOption.add(0);
     });
   }
@@ -116,38 +122,37 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // void _handleAnimationEnd() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       final selected = Fortune.randomInt(_options.length, 0);
-  //       final selectedOption = _options[selected].child;
-  //       return AlertDialog(
-  //         title: Text('Selected Option'),
-  //         content: selectedOption,
-  //         actions: [
-  //           TextButton(
-  //             onPressed: () {
-  //               Navigator.pop(context);
-  //               setState(() {
-  //                 _isSpinning = false;
-  //                 _selectedOption = selected;
-  //               });
-  //             },
-  //             child: Text('OK'),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
+  void _updateOptions(List<FortuneItem> newOptions) {
+    setState(() {
+      _options.clear();
+      _options.addAll(newOptions);
+    });
+  }
 
-  List<FortuneItem> _getDefaultOptions() {
-    return [
-      const FortuneItem(child: Text('Option 1')),
-      const FortuneItem(child: Text('Option 2')),
-      const FortuneItem(child: Text('Option 3')),
-      const FortuneItem(child: Text('Option 4')),
-    ];
+  void _handleClearOptions() {
+    setState(() {
+      _options.clear();
+    });
+  }
+
+  // List<FortuneItem> _getDefaultOptions() {
+  //   return [
+  //     const FortuneItem(child: Text('Option 1')),
+  //     const FortuneItem(child: Text('Option 2')),
+  //     const FortuneItem(child: Text('Option 3')),
+  //     const FortuneItem(child: Text('Option 4')),
+  //   ];
+  // }
+  List<FortuneItem> _getOptions() {
+    if (_options.isEmpty) {
+      return [
+        const FortuneItem(child: Text('Option 1')),
+        const FortuneItem(child: Text('Option 2')),
+        const FortuneItem(child: Text('Option 3')),
+        const FortuneItem(child: Text('Option 4')),
+      ];
+    } else {
+      return _options;
+    }
   }
 }
