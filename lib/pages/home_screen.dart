@@ -72,13 +72,26 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // void _handleAddOption() {
+  //   final newOption = _textController.text.trim();
+  //   if (newOption.isNotEmpty) {
+  //     setState(() {
+  //       _options.add(FortuneItem(child: Text(newOption)));
+  //       _textController.clear();
+  //       _updateOptions(_options);
+  //     });
+  //   }
+  // }
+
   void _handleAddOption() {
     final newOption = _textController.text.trim();
     if (newOption.isNotEmpty) {
       setState(() {
+        _options.clear(); // Clear default options
         _options.add(FortuneItem(child: Text(newOption)));
+        _options
+            .add(FortuneItem(child: Text('Option 2'))); // Add a second option
         _textController.clear();
-        _updateOptions(_options);
       });
     }
   }
@@ -143,16 +156,28 @@ class _HomePageState extends State<HomePage> {
   //     const FortuneItem(child: Text('Option 4')),
   //   ];
   // }
+  // List<FortuneItem> _getOptions() {
+  //   if (_options.isEmpty) {
+  //     return [
+  //       const FortuneItem(child: Text('Option 1')),
+  //       const FortuneItem(child: Text('Option 2')),
+  //       const FortuneItem(child: Text('Option 3')),
+  //       const FortuneItem(child: Text('Option 4')),
+  //     ];
+  //   } else {
+  //     return _options;
+  //   }
+  // }
+//  List<FortuneItem> _getOptions() {
+//   List<FortuneItem> options = [];
+
+//   for (String option in _options) {
+//     options.add(FortuneItem(child: Text(option)));
+//   }
+
+//   return options;
+// }
   List<FortuneItem> _getOptions() {
-    if (_options.isEmpty) {
-      return [
-        const FortuneItem(child: Text('Option 1')),
-        const FortuneItem(child: Text('Option 2')),
-        const FortuneItem(child: Text('Option 3')),
-        const FortuneItem(child: Text('Option 4')),
-      ];
-    } else {
-      return _options;
-    }
+    return _options;
   }
 }
