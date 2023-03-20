@@ -3,7 +3,10 @@ import 'dart:async';
 import 'package:flutter_fortune_wheel/flutter_fortune_wheel.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _HomePageState createState() => _HomePageState();
 }
 
@@ -12,7 +15,8 @@ class _HomePageState extends State<HomePage> {
   final List<FortuneItem> _options = [];
 
   // int _selectedOption = 0;
-  StreamController<int> _selectedOption = StreamController<int>.broadcast();
+  final StreamController<int> _selectedOption =
+      StreamController<int>.broadcast();
   bool _isSpinning = false;
 
   @override
@@ -26,7 +30,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Decision Maker Wheel'),
+        title: const Text('Decision Maker Wheel'),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -40,22 +44,22 @@ class _HomePageState extends State<HomePage> {
               animateFirst: _isSpinning,
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           TextField(
             controller: _textController,
             decoration: InputDecoration(
               hintText: 'Enter an option',
               suffixIcon: IconButton(
-                icon: Icon(Icons.add),
+                icon: const Icon(Icons.add),
                 onPressed: _handleAddOption,
               ),
             ),
             onSubmitted: (_) => _handleAddOption(),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           ElevatedButton(
             onPressed: _isSpinning ? null : _handleSpinWheel,
-            child: Text('Spin'),
+            child: const Text('Spin'),
           ),
         ],
       ),
@@ -85,13 +89,13 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (context) {
         int selected = -1;
-        Widget selectedOption = Text('');
+        Widget selectedOption = const Text('');
         if (_options.isNotEmpty) {
           final selected = Fortune.randomInt(_options.length, -1);
           selectedOption = _options[selected].child;
         }
         return AlertDialog(
-          title: Text('Selected Option'),
+          title: const Text('Selected Option'),
           content: selectedOption,
           actions: [
             TextButton(
@@ -104,7 +108,7 @@ class _HomePageState extends State<HomePage> {
                   }
                 });
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
@@ -140,10 +144,10 @@ class _HomePageState extends State<HomePage> {
 
   List<FortuneItem> _getDefaultOptions() {
     return [
-      FortuneItem(child: Text('Option 1')),
-      FortuneItem(child: Text('Option 2')),
-      FortuneItem(child: Text('Option 3')),
-      FortuneItem(child: Text('Option 4')),
+      const FortuneItem(child: Text('Option 1')),
+      const FortuneItem(child: Text('Option 2')),
+      const FortuneItem(child: Text('Option 3')),
+      const FortuneItem(child: Text('Option 4')),
     ];
   }
 }
