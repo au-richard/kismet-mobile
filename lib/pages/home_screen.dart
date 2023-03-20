@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:flutter_fortune_wheel/flutter_fortune_wheel.dart';
 
 class HomePage extends StatefulWidget {
@@ -8,14 +9,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final TextEditingController _textController = TextEditingController();
-  final List<Fortune> _options = [];
+  final List<FortuneItem> _options = [];
 
-  int _selectedOption = 0;
+  // int _selectedOption = 0;
+  StreamController<int> _selectedOption = StreamController<int>.broadcast();
   bool _isSpinning = false;
 
   @override
   void dispose() {
     _textController.dispose();
+    _selectedOption.close();
     super.dispose();
   }
 
@@ -30,7 +33,8 @@ class _HomePageState extends State<HomePage> {
         children: [
           Expanded(
             child: FortuneWheel(
-              selected: _selectedOption,
+              // selected: _selectedOption,
+              selected: _selectedOption.stream,
               items: _options.isNotEmpty ? _options : _getDefaultOptions(),
               onAnimationEnd: _handleAnimationEnd,
               animateFirst: _isSpinning,
@@ -62,7 +66,7 @@ class _HomePageState extends State<HomePage> {
     final newOption = _textController.text.trim();
     if (newOption.isNotEmpty) {
       setState(() {
-        _options.add(Fortune(id: _options.length, child: Text(newOption)));
+        _options.add(FortuneItem(child: Text(newOption)));
         _textController.clear();
       });
     }
@@ -71,15 +75,21 @@ class _HomePageState extends State<HomePage> {
   void _handleSpinWheel() {
     setState(() {
       _isSpinning = true;
-      _selectedOption = 0;
+      // _selectedOption = 0;
+      _selectedOption.add(0);
     });
   }
 
-  void _handleAnimationEnd(int selected) {
-    final selectedOption = _options[selected].child;
+  void _handleAnimationEnd() {
     showDialog(
       context: context,
       builder: (context) {
+        int selected = -1;
+        Widget selectedOption = Text('');
+        if (_options.isNotEmpty) {
+          final selected = Fortune.randomInt(_options.length, -1);
+          selectedOption = _options[selected].child;
+        }
         return AlertDialog(
           title: Text('Selected Option'),
           content: selectedOption,
@@ -89,6 +99,9 @@ class _HomePageState extends State<HomePage> {
                 Navigator.pop(context);
                 setState(() {
                   _isSpinning = false;
+                  if (_options.isNotEmpty) {
+                    _selectedOption.add(selected);
+                  }
                 });
               },
               child: Text('OK'),
@@ -99,12 +112,38 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  List<Fortune> _getDefaultOptions() {
+  // void _handleAnimationEnd() {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       final selected = Fortune.randomInt(_options.length, 0);
+  //       final selectedOption = _options[selected].child;
+  //       return AlertDialog(
+  //         title: Text('Selected Option'),
+  //         content: selectedOption,
+  //         actions: [
+  //           TextButton(
+  //             onPressed: () {
+  //               Navigator.pop(context);
+  //               setState(() {
+  //                 _isSpinning = false;
+  //                 _selectedOption = selected;
+  //               });
+  //             },
+  //             child: Text('OK'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
+
+  List<FortuneItem> _getDefaultOptions() {
     return [
-      Fortune(id: 0, child: Text('Option 1')),
-      Fortune(id: 1, child: Text('Option 2')),
-      Fortune(id: 2, child: Text('Option 3')),
-      Fortune(id: 3, child: Text('Option 4')),
+      FortuneItem(child: Text('Option 1')),
+      FortuneItem(child: Text('Option 2')),
+      FortuneItem(child: Text('Option 3')),
+      FortuneItem(child: Text('Option 4')),
     ];
   }
 }

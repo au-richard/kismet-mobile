@@ -15,9 +15,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Kismet',
       theme: ThemeData(
-        primarySwatch: Color.fromARGB(255, 87, 49, 226),
+        primaryColor: Colors.deepPurpleAccent,
       ),
-      home: const HomePage(),
+      home: HomePage(),
     );
   }
 }
