@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kismet_mobile/pages/home_screen.dart';
+import 'package:kismet_mobile/pages/home_screen1.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Colors.deepPurpleAccent,
       ),
-      home: const HomePage(),
+      home: const HomeScreen(),
     );
   }
 }
