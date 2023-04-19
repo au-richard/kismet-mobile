@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kismet_mobile/pages/home_screen.dart';
+import 'package:kismet_mobile/pages/home_screen1.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,9 +16,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Kismet',
       theme: ThemeData(
-        primarySwatch: Color.fromARGB(255, 87, 49, 226),
+        primaryColor: Colors.deepPurpleAccent,
       ),
-      home: const HomePage(),
+      home: const HomeScreen(),
     );
   }
 }
@@ -93,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(
               '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
         ),
