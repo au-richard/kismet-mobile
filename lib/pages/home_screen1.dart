@@ -88,6 +88,19 @@ class _HomeScreenState extends State<HomeScreen> {
     _selectedController.sink.add(selected);
   }
 
+  void _clearDecisions() {
+    setState(() {
+      decisions.clear();
+      items = [
+        FortuneItem(child: Text('Option 1')),
+        FortuneItem(child: Text('Option 2')),
+      ];
+      selected = 0; // Reset selected item to 0
+    });
+    _textEditingController.clear(); // Clear the text field
+    _selectedController.sink.add(selected); // Update selected item in stream
+  }
+
   @override
   void dispose() {
     _selectedController.close(); // Close the stream controller
@@ -119,6 +132,33 @@ class _HomeScreenState extends State<HomeScreen> {
               child: const Text('Add Decision'),
             ),
             const SizedBox(height: 16.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    _selectedController.sink
+                        .add(Fortune.randomInt(0, items.length - 1));
+                  },
+                  child: const Text('Spin'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      decisions.clear();
+                      items = [
+                        FortuneItem(child: Text("Option 1")),
+                        FortuneItem(child: Text("Option 2")),
+                      ];
+                      selected = 0;
+                      _selectedController.sink.add(selected);
+                    });
+                  },
+                  child: const Text('Clear'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16.0),
             Expanded(
               child: FortuneWheel(
                 selected: _selectedController.stream,
@@ -126,11 +166,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 onAnimationEnd: () => print('Animation ended'),
                 items: items,
               ),
-            ),
-            const SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: _spinWheel,
-              child: const Text('Spin'),
             ),
           ],
         ),
